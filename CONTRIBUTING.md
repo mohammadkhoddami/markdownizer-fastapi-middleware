@@ -22,12 +22,13 @@ Run all checks before submitting a pull request:
 ```bash
 ruff check .
 ruff format .
-mypy markdownizer tests
+mypy markdownizer markdownizer_fastapi tests tests_fastapi
 pytest -q
 ```
 
 The CI pipeline runs the same checks on Python 3.9-3.13 and fails under 85%
-coverage.
+coverage. The FastAPI integration is tested against both the FastAPI floor
+version and the latest release; install it with `pip install -e ".[dev,fastapi]"`.
 
 ## Releasing
 

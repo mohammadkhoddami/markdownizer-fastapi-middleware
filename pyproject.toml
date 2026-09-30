@@ -51,12 +51,19 @@ Issues = "https://github.com/mohammadkhoddami/Markdownizer/issues"
 markdownizer = "markdownizer.cli:main"
 
 [project.optional-dependencies]
+fastapi = [
+    "fastapi>=0.100",
+    "starlette>=0.27",
+]
 dev = [
     "build>=1.0",
+    "fastapi>=0.100",
+    "httpx>=0.24",
     "mypy>=1.10",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.8",
+    "starlette>=0.27",
     "tomli>=2.0; python_version < '3.11'",
     "twine>=5.0",
 ]
@@ -69,6 +76,7 @@ version = { attr = "markdownizer.__version__" }
 
 [tool.setuptools.package-data]
 markdownizer = ["py.typed"]
+markdownizer_fastapi = ["py.typed"]
 
 [tool.ruff]
 line-length = 100
@@ -86,9 +94,13 @@ warn_return_any = true
 module = "tests.*"
 disallow_untyped_defs = false
 
+[[tool.mypy.overrides]]
+module = "tests_fastapi.*"
+disallow_untyped_defs = false
+
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q --cov=markdownizer --cov-report=term-missing"
+testpaths = ["tests", "tests_fastapi"]
+addopts = "-q --cov=markdownizer --cov=markdownizer_fastapi --cov-report=term-missing"
 
 [tool.coverage.run]
 branch = true

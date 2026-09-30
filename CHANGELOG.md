@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **FastAPI integration** (`markdownizer_fastapi`, optional `fastapi` extra):
+  - `MarkdownizerMiddleware` — pure ASGI middleware serving read-only
+    artifacts under a configurable prefix: `manifest`, `stats`,
+    `context.md`, `project.json`, `routes.json`, `llms.txt`,
+    `openapi-ref.json`, and `POST refresh`.
+  - `MarkdownizerPlugin` — joins the live FastAPI route table (composed
+    paths, dependency chains, response models) with the static Project IR,
+    matching routes by module and qualified name and reporting unmatched
+    routes explicitly.
+  - `MarkdownizerRouter` — `APIRouter` variant for apps that cannot add
+    middleware.
+  - Deterministic `ETag` from the enriched IR hash with `304` support,
+    token-budget query parameters, profiles, and keyword queries.
+  - Safe defaults: disabled without the enable environment variable,
+    metadata only (`include_source=False`), optional token auth and CIDR
+    allowlist, no filesystem writes, no project code execution.
+- Plan document: `docs/FASTAPI_MIDDLEWARE_PLAN.md`.
+
 ## [0.4.5] - 2026-08-30
 
 ### Changed

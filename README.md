@@ -169,6 +169,43 @@ Import resolution is conservative and fully static: project code is never
 imported or executed. Imports that cannot be resolved to a project module
 are marked `external`.
 
+### FastAPI middleware
+
+The optional `fastapi` extra serves the same deterministic artifacts over
+HTTP from a running FastAPI/Starlette application:
+
+```bash
+pip install "markdownizer[fastapi]"
+```
+
+```python
+from fastapi import FastAPI
+from markdownizer_fastapi import MarkdownizerMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    MarkdownizerMiddleware,
+    project_root=".",
+    include_source=False,  # metadata only by default
+)
+
+# GET /_markdownizer/context.md?profile=api&max_tokens=20000
+# GET /_markdownizer/llms.txt
+# GET /_markdownizer/project.json
+# GET /_markdownizer/stats
+# GET /_markdownizer/routes.json
+```
+
+The endpoints are disabled unless `MARKDOWNIZER_FASTAPI_ENABLED=1` is set (or
+`debug=True`), serve metadata only by default, and answer with a stable `ETag`
+derived from the IR hash so clients can cache deterministically.
+`MarkdownizerPlugin` additionally joins the live FastAPI route table (router
+prefixes, `Depends` chains, response models) with the static Project IR, and
+`MarkdownizerRouter` offers the same endpoints as an `APIRouter`.
+
+The full plan lives in
+[docs/FASTAPI_MIDDLEWARE_PLAN.md](docs/FASTAPI_MIDDLEWARE_PLAN.md).
+
 ## What is extracted
 
 For every documented object (modules, packages, classes, dataclasses, enums,
